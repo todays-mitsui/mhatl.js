@@ -1,29 +1,67 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <h1>Metropolis–Hastings Algorithm Time-Lapse</h1>
+    <nav class="ui">
+      <button
+        class="btn-control"
+        @click="onClick"
+      >{{ pause ? '実行する' : '停止する' }}</button>
+      <VueSlider
+        v-model="speed"
+        :min="1"
+        :max="20"
+        :tooltip-formatter="speed => `Speed: ${speed}`"
+      />
+    </nav>
+    <div>{{ value }}</div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from './components/HelloWorld.vue'
+import VueSlider from 'vue-slider-component'
+import 'vue-slider-component/theme/antd.css'
 
 @Component({
   components: {
-    HelloWorld
+    VueSlider
   }
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  private pause = true
+  private speed = 10
+  private value = 0
+
+  loop () {
+    this.value = this.value + 1
+    if (!this.pause) { setTimeout(this.loop, 1000 / this.speed) }
+  }
+
+  onClick () {
+    this.pause = !this.pause
+    if (!this.pause) { this.loop() }
+  }
+}
 </script>
 
 <style>
 #app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 0;
+
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+.ui {
+  display: flex;
+  align-items: center;
+}
+.vue-slider {
+  flex-grow: 1;
+  margin-left: 16px;
 }
 </style>
