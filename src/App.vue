@@ -4,15 +4,16 @@
     <nav class="ui">
       <button
         class="btn-control"
-        @click="pause = !pause"
+        @click="onClick"
       >{{ pause ? '実行する' : '停止する' }}</button>
       <VueSlider
-        v-model="value"
+        v-model="speed"
         :min="1"
         :max="20"
-        :tooltip-formatter="val => `Speed: ${val}`"
+        :tooltip-formatter="speed => `Speed: ${speed}`"
       />
     </nav>
+    <div>{{ value }}</div>
   </div>
 </template>
 
@@ -22,15 +23,30 @@ import 'vue-slider-component/theme/antd.css'
 
 export default {
   name: 'App',
+
   components: {
     VueSlider,
   },
+
   data() {
     return {
-      pause: false,
-      value: 10,
+      pause: true,
+      speed: 10,
+      value: 0,
     }
-  }
+  },
+
+  methods: {
+    loop() {
+      this.value = this.value + 1
+      if (!this.pause) { setTimeout(this.loop, 1000 / this.speed) }
+    },
+
+    onClick() {
+      this.pause = !this.pause
+      if (!this.pause) { this.loop() }
+    },
+  },
 }
 </script>
 
@@ -48,9 +64,10 @@ export default {
 
 .ui {
   display: flex;
+  align-items: center;
 }
 .vue-slider {
   flex-grow: 1;
-  margin-left: 16px;;
+  margin-left: 16px;
 }
 </style>
