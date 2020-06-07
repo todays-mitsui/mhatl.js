@@ -22,6 +22,9 @@ import { Component, Vue } from 'vue-property-decorator'
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/antd.css'
 
+import Point from '../lib/interface/Point'
+import rnorm from '../lib/util/rnorm'
+
 @Component({
   components: {
     VueSlider
@@ -40,6 +43,30 @@ export default class App extends Vue {
   onClick () {
     this.pause = !this.pause
     if (!this.pause) { this.loop() }
+  }
+
+  // ======================================================================== //
+
+  /**
+   * 提案分布
+   */
+  q ({ x, y }: Point, delta: number): Point {
+    return {
+      x: x + rnorm(0, delta),
+      y: y + rnorm(0, delta)
+    }
+  }
+
+  /**
+   * 目標分布のカーネル
+   *
+   * @param point
+   * @param b     相関係数 -1 < b < 1
+   */
+  p ({ x, y }: Point, b: number): number {
+    if (Math.abs(b) >= 1) { throw new Error() }
+
+    return Math.exp(-0.5 * (x * x - 2 * b * x * y + y * y))
   }
 }
 </script>
