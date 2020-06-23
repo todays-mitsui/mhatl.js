@@ -40,7 +40,10 @@ export default class ScatterChart extends Mixins(Scatter) {
   datasets!: Chart.ChartDataSets[]
 
   @Prop({ default: () => ({ text: '', fontColor: '#999999' }) })
-  title!: { text: string, fontColor: Chart.ChartColor }
+  title!: {
+    text: string;
+    fontColor: Chart.ChartColor;
+  }
 
   mounted () {
     this.renderChart(
