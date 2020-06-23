@@ -14,6 +14,9 @@
       />
     </nav>
     <div>{{ value }}</div>
+    <div>
+      <DisplayScatter />
+    </div>
   </div>
 </template>
 
@@ -22,12 +25,15 @@ import { Component, Vue } from 'vue-property-decorator'
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/antd.css'
 
+import DisplayScatter from './components/display/DisplayScatter.vue'
+
 import Point from '../lib/interface/Point'
 import rnorm from '../lib/util/rnorm'
 
 @Component({
   components: {
-    VueSlider
+    VueSlider,
+    DisplayScatter
   }
 })
 export default class App extends Vue {
