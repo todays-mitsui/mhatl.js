@@ -10,8 +10,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { helpers } from 'chart.js'
+import { Sample } from '../../../lib/interfaces'
 import ScatterChart from '../chart/ScatterChart'
 
 const RED = '#ff0000'
@@ -24,6 +25,9 @@ const GRAY = '#999999'
   }
 })
 export default class App extends Vue {
+  @Prop()
+  samples!: Sample[]
+
   titleText = ''
   titleColor = GRAY
 

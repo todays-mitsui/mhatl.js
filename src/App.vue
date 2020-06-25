@@ -15,7 +15,9 @@
     </nav>
     <div>{{ value }}</div>
     <div>
-      <DisplayScatter />
+      <DisplayScatter
+        :samples="samples"
+      />
     </div>
   </div>
 </template>
@@ -27,8 +29,11 @@ import 'vue-slider-component/theme/antd.css'
 
 import DisplayScatter from './components/display/DisplayScatter.vue'
 
-import Point from '../lib/interface/Point'
+import { Point, Sample } from '../lib/interfaces'
 import rnorm from '../lib/util/rnorm'
+import uniform from '../lib/util/uniform'
+
+const BURN_IN_PERIOD = 50
 
 @Component({
   components: {
@@ -39,16 +44,17 @@ import rnorm from '../lib/util/rnorm'
 export default class App extends Vue {
   private pause = true
   private speed = 10
-  private value = 0
+
+  private count = 0
+  private current: Point = { x: 3, y: 3 }
+  private samples: Sample[] = []
 
   loop () {
-    this.value = this.value + 1
-    if (!this.pause) { setTimeout(this.loop, 1000 / this.speed) }
-  }
+    const sample = this.sample(this.count)
+    this.samples.push(sample)
+    this.count += 1
 
-  onClick () {
-    this.pause = !this.pause
-    if (!this.pause) { this.loop() }
+    if (!this.pause) { setTimeout(this.loop, 1000 / this.speed) }
   }
 
   // ======================================================================== //
@@ -56,7 +62,7 @@ export default class App extends Vue {
   /**
    * 提案分布
    */
-  q ({ x, y }: Point, delta: number): Point {
+  q ({ x, y }: Point, delta = 1): Point {
     return {
       x: x + rnorm(0, delta),
       y: y + rnorm(0, delta)
@@ -69,10 +75,36 @@ export default class App extends Vue {
    * @param point
    * @param b     相関係数 -1 < b < 1
    */
-  p ({ x, y }: Point, b: number): number {
+  p ({ x, y }: Point, b = 0.5): number {
     if (Math.abs(b) >= 1) { throw new Error() }
 
     return Math.exp(-0.5 * (x * x - 2 * b * x * y + y * y))
+  }
+
+  sample (count: number): Sample {
+    const current = this.current
+    const next = this.q(current)
+
+    const pCurrent = this.p(current)
+    const pNext = this.p(next)
+
+    const r = pNext / pCurrent // 受容確率
+    const accept = r > 1 || r > uniform(0, 1)
+
+    return {
+      count,
+      burnin: count < BURN_IN_PERIOD,
+      current,
+      next,
+      result: accept ? 'accepted' : 'rejected'
+    }
+  }
+
+  // ======================================================================== //
+
+  onClick () {
+    this.pause = !this.pause
+    if (!this.pause) { this.loop() }
   }
 }
 </script>
