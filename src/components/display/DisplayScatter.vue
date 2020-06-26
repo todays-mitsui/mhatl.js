@@ -1,6 +1,7 @@
 <template>
   <section class="scatter-chart-wrapper">
     <div class="inner chart-wrapper">
+      <p :style="labelStyle">{{ label }}</p>
       <ScatterChart
         :title="{ text: titleText, fontColor: titleColor }"
         :datasets="datasets"
@@ -11,6 +12,14 @@
 </template>
 
 <style scoped>
+p {
+  margin: 0 0 -1em;
+  font-size: 16px;
+  font-family: monospace;
+  font-weight: 700;
+  text-align: center;
+}
+
 .inner {
   max-width: 600px;
 }
@@ -38,13 +47,24 @@ export default class DisplayScatter extends Vue {
   titleText = ''
   titleColor = GRAY
 
-  public updateTitle (i: number, burnin: boolean, accept: boolean) {
-    this.titleText = `count: ${i}, ${accept ? 'Accept' : 'Reject'}${burnin ? ' [burn-in]' : ''}`
+  get label () {
+    if (!this.samples.length) { return '-' }
 
-    const fontColor = accept
-      ? helpers.color(BLUE).alpha(0.6).rgbString()
-      : helpers.color(RED).alpha(0.6).rgbString()
-    this.titleColor = fontColor
+    const count = this.samples.length - 1
+    const { burnin, result } = this.samples[count]
+
+    return `count: ${count}, ${result} ${burnin ? '[burn-in]' : ''}`
+  }
+
+  get labelStyle () {
+    if (!this.samples.length) { return { color: '#999999' } }
+
+    const count = this.samples.length - 1
+    const { result } = this.samples[count]
+
+    const color = result === 'accepted' ? BLUE : RED
+
+    return { color }
   }
 
   get datasets (): Chart.ChartDataSets[] {
