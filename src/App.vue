@@ -13,10 +13,31 @@
         :tooltip-formatter="speed => `Speed: ${speed}`"
       />
     </nav>
-    <div>{{ value }}</div>
     <div>
-      <DisplayScatter
+      <DisplayScatter :samples="samples" />
+    </div>
+    <div>
+      <DisplayHistgram
         :samples="samples"
+        axis="x"
+      />
+    </div>
+    <div>
+      <DisplayHistgram
+        :samples="samples"
+        axis="y"
+      />
+    </div>
+    <div>
+      <DisplayTraceline
+        :samples="samples"
+        axis="x"
+      />
+    </div>
+    <div>
+      <DisplayTraceline
+        :samples="samples"
+        axis="y"
       />
     </div>
   </div>
@@ -28,17 +49,23 @@ import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/antd.css'
 
 import DisplayScatter from './components/display/DisplayScatter.vue'
+import DisplayHistgram from './components/display/DisplayHistgram.vue'
+import DisplayTraceline from './components/display/DisplayTraceline.vue'
 
 import { Point, Sample } from '../lib/interfaces'
 import rnorm from '../lib/util/rnorm'
 import uniform from '../lib/util/uniform'
 
-const BURN_IN_PERIOD = 50
+const SIGMA = 1.0 // 提案分布の標準偏差
+const RHO = 0.5 // 目標分布(二変量正規分布)の相関係数
+const BURN_IN_PERIOD = 50 // バーンイン期間の長さ
 
 @Component({
   components: {
     VueSlider,
-    DisplayScatter
+    DisplayScatter,
+    DisplayHistgram,
+    DisplayTraceline
   }
 })
 export default class App extends Vue {
@@ -62,23 +89,18 @@ export default class App extends Vue {
   /**
    * 提案分布
    */
-  q ({ x, y }: Point, delta = 1): Point {
+  q ({ x, y }: Point): Point {
     return {
-      x: x + rnorm(0, delta),
-      y: y + rnorm(0, delta)
+      x: x + rnorm(0, SIGMA),
+      y: y + rnorm(0, SIGMA)
     }
   }
 
   /**
    * 目標分布のカーネル
-   *
-   * @param point
-   * @param b     相関係数 -1 < b < 1
    */
-  p ({ x, y }: Point, b = 0.5): number {
-    if (Math.abs(b) >= 1) { throw new Error() }
-
-    return Math.exp(-0.5 * (x * x - 2 * b * x * y + y * y))
+  p ({ x, y }: Point): number {
+    return Math.exp(-0.5 * (x * x - 2 * RHO * x * y + y * y))
   }
 
   sample (count: number): Sample {
@@ -89,14 +111,26 @@ export default class App extends Vue {
     const pNext = this.p(next)
 
     const r = pNext / pCurrent // 受容確率
-    const accept = r > 1 || r > uniform(0, 1)
+    const accepted = r > 1 || r > uniform(0, 1)
+    const result = accepted ? 'accepted' : 'rejected'
+
+    console.info({
+      pCurrent: pCurrent.toFixed(2),
+      pNext: pNext.toFixed(2),
+      r: r.toFixed(2),
+      result
+    })
+
+    if (accepted) {
+      this.current = { ...next }
+    }
 
     return {
       count,
       burnin: count < BURN_IN_PERIOD,
       current,
       next,
-      result: accept ? 'accepted' : 'rejected'
+      result
     }
   }
 

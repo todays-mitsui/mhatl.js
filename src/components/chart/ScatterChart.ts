@@ -1,4 +1,4 @@
-import { Component, Prop, Mixins } from 'vue-property-decorator'
+import { Component, Prop, Mixins, Watch } from 'vue-property-decorator'
 import { Scatter } from 'vue-chartjs'
 
 const options = {
@@ -31,7 +31,11 @@ const options = {
   },
   legend: {
     display: false
-  }
+  },
+  tooltips: {
+    enabled: false
+  },
+  responsive: true
 }
 
 @Component
@@ -45,7 +49,7 @@ export default class ScatterChart extends Mixins(Scatter) {
     fontColor: Chart.ChartColor;
   }
 
-  mounted () {
+  update () {
     this.renderChart(
       { datasets: this.datasets },
       {
@@ -59,5 +63,14 @@ export default class ScatterChart extends Mixins(Scatter) {
         }
       }
     )
+  }
+
+  mounted () {
+    this.update()
+  }
+
+  @Watch('datasets')
+  onChangeDatasets () {
+    this.update()
   }
 }
