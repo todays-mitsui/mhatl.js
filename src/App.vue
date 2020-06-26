@@ -59,6 +59,7 @@ import uniform from '../lib/util/uniform'
 const SIGMA = 1.0 // 提案分布の標準偏差
 const RHO = 0.5 // 目標分布(二変量正規分布)の相関係数
 const BURN_IN_PERIOD = 50 // バーンイン期間の長さ
+const FIRST_POINT = { x: 3, y: 3 } // サンプルの初期値
 
 @Component({
   components: {
@@ -73,7 +74,7 @@ export default class App extends Vue {
   private speed = 10
 
   private count = 0
-  private current: Point = { x: 3, y: 3 }
+  private current: Point = FIRST_POINT
   private samples: Sample[] = []
 
   loop () {

@@ -31,6 +31,9 @@ export default class HistogramChart extends Mixins(HorizontalBar) {
   @Prop({ default: () => [] })
   frequencies!: number[]
 
+  @Prop()
+  count!: number
+
   update () {
     this.renderChart(
       {
@@ -56,6 +59,19 @@ export default class HistogramChart extends Mixins(HorizontalBar) {
 
   @Watch('frequencies')
   onChangeFrequencies () {
-    this.update()
+    if (this.u) {
+      this.update()
+    }
+  }
+
+  get u () {
+    const count = this.count
+
+    switch (true) {
+      case count < 100: return count % 4 === 0
+      case count < 1000: return count % 10 === 0
+      case count < 10000: return count % 25 === 0
+      default: return count % 100 === 0
+    }
   }
 }

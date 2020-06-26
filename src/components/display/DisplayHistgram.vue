@@ -4,6 +4,7 @@
       <HistogramChart
         :bins="bins"
         :frequencies="frequencies"
+        :count="numPracticalSamples"
       />
     </div>
     <!-- /.inner -->
@@ -49,6 +50,14 @@ export default class DisplayHistgram extends Vue {
     )
   }
 
+  get practicalSamples (): Sample[] {
+    return this.samples.filter(({ burnin, result }) => !burnin && result === 'accepted')
+  }
+
+  get numPracticalSamples () {
+    return this.practicalSamples.length
+  }
+
   get frequencies () {
     const rangeMin = this.rangeMin
     const rangeMax = this.rangeMax
@@ -57,8 +66,7 @@ export default class DisplayHistgram extends Vue {
 
     const ranks: Map<number, number> = new Map(Array.from(Array(numBins), (_, i) => [i, 0]))
 
-    const samples = this.samples.filter(({ burnin }) => !burnin)
-    for (const sample of samples) {
+    for (const sample of this.practicalSamples) {
       const { next } = sample
 
       const value = next[this.axis]
@@ -72,7 +80,7 @@ export default class DisplayHistgram extends Vue {
 
     return Array.from(
       ranks.values(),
-      frequency => frequency / samples.length
+      frequency => frequency / this.numPracticalSamples
     )
   }
 }
