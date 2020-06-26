@@ -11,7 +11,6 @@ const options = {
   },
   scales: {
     yAxes: [{
-      // display: false,
       type: 'linear',
       position: 'left',
       ticks: {
@@ -26,15 +25,10 @@ const options = {
       position: 'center',
       ticks: {
         min: 0,
-        // max: 1000,
         stepSize: 200
       }
     }]
   }
-  // title: {
-  //     display: true,
-  //     text: '',
-  // },
 }
 
 @Component

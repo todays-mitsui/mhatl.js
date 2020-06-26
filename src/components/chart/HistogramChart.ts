@@ -12,32 +12,15 @@ const options = {
   scales: {
     yAxes: [{
       display: false
-      // type: 'linear',
-      // position: 'bottom',
-      // ticks: {
-      //     min: -5,
-      //     max: 5,
-      //     stepSize: 2,
-      // },
     }],
     xAxes: [{
-      // display: false,
       type: 'linear',
-      // position: 'left',
       ticks: {
         min: 0,
         max: 0.25
-        // stepSize: 0.05,
       }
     }]
   }
-  // title: {
-  //     display: true,
-  //     text: '',
-  // },
-  // legend: {
-  //     display: false
-  // },
 }
 
 @Component
