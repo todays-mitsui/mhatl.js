@@ -91,7 +91,7 @@ export default class DisplayHistgram extends Vue {
     return Array.from(
       ranks.values(),
       frequency => frequency / this.numPracticalSamples
-    )
+    ).reverse()
   }
 }
 </script>
