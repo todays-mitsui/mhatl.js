@@ -29,7 +29,7 @@ p {
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { helpers } from 'chart.js'
-import { Sample } from '../../../lib/interfaces'
+import { Point, Sample } from '../../../lib/interfaces'
 import ScatterChart from '../chart/ScatterChart'
 
 const RED = '#ff0000'
@@ -42,6 +42,9 @@ const GRAY = '#999999'
   }
 })
 export default class DisplayScatter extends Vue {
+  @Prop()
+  p0!: Point
+
   @Prop()
   samples!: Sample[]
 
@@ -69,10 +72,25 @@ export default class DisplayScatter extends Vue {
   }
 
   get datasets (): Chart.ChartDataSets[] {
-    return this.samples.map(({ burnin, current, next, result }) => {
+    const rectPointStyle: Chart.PointStyle = 'rect'
+    const first = {
+      data: [this.p0],
+      fill: false,
+      showLine: false,
+      lineTension: 0,
+      borderWidth: 0,
+      borderDash: [0],
+      pointStyle: rectPointStyle,
+      pointRadius: [5],
+      pointBorderWidth: [1],
+      pointBackgroundColor: helpers.color(BLUE).alpha(0.72).rgbString(),
+      pointBorderColor: helpers.color(BLUE).alpha(0.9).rgbString()
+    }
+
+    return [first, ...this.samples.map(({ burnin, current, next, result }) => {
       const rejected = result === 'rejected'
 
-      const pointStyle = rejected ? 'crossRot' : 'circle'
+      const pointStyle: Chart.PointStyle = rejected ? 'crossRot' : 'circle'
       const pointRadius = rejected ? [0, 5] : [0, 3]
 
       const borderWidth = rejected ? [0, 2] : [0, 1]
@@ -93,7 +111,7 @@ export default class DisplayScatter extends Vue {
         pointBackgroundColor: helpers.color(baseColor).alpha(alpha * 0.9).rgbString(),
         pointBorderColor: helpers.color(baseColor).alpha(alpha).rgbString()
       }
-    })
+    })]
   }
 }
 </script>

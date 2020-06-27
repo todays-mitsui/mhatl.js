@@ -1,21 +1,20 @@
 <template>
   <div id="app">
     <h1>Metropolis–Hastings Algorithm Time-Lapse</h1>
-    <nav class="ui">
-      <button
-        class="btn-control"
-        @click="onClick"
-      >{{ pause ? 'サンプリングを開始する' : 'サンプリングを停止する' }}</button>
-      <VueSlider
-        v-model="speed"
-        :min="1"
-        :max="20"
-        :tooltip-formatter="speed => `Speed: ${speed}`"
-      />
-    </nav>
+    <ControlPanel
+      class="ui"
+      :x0.sync="x0"
+      :y0.sync="y0"
+      :disabled="!!samples.length"
+      :speed.sync="speed"
+      :pause.sync="pause"
+      @update:pause="onUpdatePause"
+      @reset="onReset"
+    />
     <div class="display">
       <DisplayScatter
         class="scatter"
+        :p0="{ x: x0, y: y0 }"
         :samples="samples"
       />
 
@@ -46,9 +45,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import VueSlider from 'vue-slider-component'
-import 'vue-slider-component/theme/antd.css'
 
+import ControlPanel from './components/ControlPanel.vue'
 import DisplayScatter from './components/display/DisplayScatter.vue'
 import DisplayHistgram from './components/display/DisplayHistgram.vue'
 import DisplayTraceline from './components/display/DisplayTraceline.vue'
@@ -60,22 +58,23 @@ import uniform from '../lib/util/uniform'
 const SIGMA = 1.0 // 提案分布の標準偏差
 const RHO = 0.5 // 目標分布(二変量正規分布)の相関係数
 const BURN_IN_PERIOD = 50 // バーンイン期間の長さ
-const FIRST_POINT = { x: 3, y: 3 } // サンプルの初期値
 
 @Component({
   components: {
-    VueSlider,
+    ControlPanel,
     DisplayScatter,
     DisplayHistgram,
     DisplayTraceline
   }
 })
 export default class App extends Vue {
+  private x0 = 3.0
+  private y0 = 3.0
   private pause = true
   private speed = 10
 
   private count = 0
-  private current: Point = FIRST_POINT
+  private current?: Point
   private samples: Sample[] = []
 
   loop () {
@@ -106,7 +105,7 @@ export default class App extends Vue {
   }
 
   sample (count: number): Sample {
-    const current = this.current
+    const current = this.current || { x: this.x0, y: this.y0 }
     const next = this.q(current)
 
     const pCurrent = this.p(current)
@@ -138,9 +137,24 @@ export default class App extends Vue {
 
   // ======================================================================== //
 
-  onClick () {
-    this.pause = !this.pause
+  get p0 (): Point {
+    return {
+      x: this.x0,
+      y: this.y0
+    }
+  }
+
+  onUpdatePause () {
     if (!this.pause) { this.loop() }
+  }
+
+  onReset () {
+    this.pause = true
+    setTimeout(() => {
+      this.count = 0
+      this.current = undefined
+      this.samples = []
+    }, 1000 / this.speed)
   }
 }
 </script>
@@ -153,21 +167,12 @@ export default class App extends Vue {
 #app {
   max-width: 800px;
   margin: 0 auto;
-  padding: 32px 0;
+  padding: 1px 0;
 
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-}
-
-.ui {
-  display: flex;
-  align-items: center;
-}
-.vue-slider {
-  flex-grow: 1;
-  margin-left: 16px;
 }
 
 .display {
