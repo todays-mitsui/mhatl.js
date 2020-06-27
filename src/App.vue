@@ -5,7 +5,7 @@
       <button
         class="btn-control"
         @click="onClick"
-      >{{ pause ? '実行する' : '停止する' }}</button>
+      >{{ pause ? 'サンプリングを開始する' : 'サンプリングを停止する' }}</button>
       <VueSlider
         v-model="speed"
         :min="1"
