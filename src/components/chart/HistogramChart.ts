@@ -59,12 +59,13 @@ export default class HistogramChart extends Mixins(HorizontalBar) {
 
   @Watch('frequencies')
   onChangeFrequencies () {
-    if (this.u) {
-      this.update()
-    }
+    if (this.tick) { this.update() }
   }
 
-  get u () {
+  /**
+   * ヒストグラムを更新するべきタイミングかどうか判定する
+   */
+  get tick () {
     const count = this.count
 
     switch (true) {

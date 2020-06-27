@@ -78,6 +78,20 @@ export default class TracelineChart extends Mixins(Line) {
 
   @Watch('practicalValues')
   onChangePracticalValues () {
-    this.update()
+    if (this.tick) { this.update() }
+  }
+
+  /**
+   * トレースラインを更新するべきタイミングかどうか判定する
+   */
+  get tick () {
+    const count = this.burninValues.length + this.practicalValues.length
+
+    switch (true) {
+      case count < 100: return count % 4 === 0
+      case count < 1000: return count % 10 === 0
+      case count < 10000: return count % 25 === 0
+      default: return count % 100 === 0
+    }
   }
 }

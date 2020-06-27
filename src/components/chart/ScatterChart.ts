@@ -73,4 +73,18 @@ export default class ScatterChart extends Mixins(Scatter) {
   onChangeDatasets () {
     this.update()
   }
+
+  /**
+   * トレースラインを更新するべきタイミングかどうか判定する
+   */
+  get tick () {
+    const count = this.datasets.length
+
+    switch (true) {
+      case count < 2000: return true
+      case count < 5000: return count % 4 === 0
+      case count < 10000: return count % 8 === 0
+      default: return count % 16 === 0
+    }
+  }
 }
