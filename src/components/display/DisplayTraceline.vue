@@ -1,14 +1,37 @@
 <template>
   <section class="chart-wrapper traceline-chart-wrapper">
-    <div class="traceline">
+    <h3>{{ axis }}軸 トレースライン</h3>
+    <div class="inner">
       <TracelineChart
         :burninValues="burninValues"
         :practicalValues="practicalValues"
       />
     </div>
-    <!-- /.inner -->
   </section>
 </template>
+
+<style scoped>
+.chart-wrapper {
+  position: relative;
+  padding-bottom: 24px;;
+}
+
+.inner > * {
+  position: relative;
+  height: 126px;
+}
+
+h3 {
+  position: absolute;
+  left: 8px;
+  bottom: 100%;
+  z-index: 1000;
+
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+}
+</style>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'

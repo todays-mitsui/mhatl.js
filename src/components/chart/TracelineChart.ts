@@ -5,7 +5,6 @@ const options = {
   animation: {
     duration: 0
   },
-  maintainAspectRatio: false,
   legend: {
     display: false
   },
@@ -28,7 +27,12 @@ const options = {
         stepSize: 200
       }
     }]
-  }
+  },
+  tooltips: {
+    enabled: false
+  },
+  responsive: true,
+  maintainAspectRatio: false
 }
 
 @Component

@@ -13,29 +13,30 @@
         :tooltip-formatter="speed => `Speed: ${speed}`"
       />
     </nav>
-    <div>
-      <DisplayScatter :samples="samples" />
-    </div>
-    <div>
-      <DisplayHistgram
+    <div class="display">
+      <DisplayScatter
+        class="scatter"
+        :samples="samples"
+      />
+
+      <DisplayTraceline
+        class="x-trace"
         :samples="samples"
         axis="x"
       />
-    </div>
-    <div>
       <DisplayHistgram
+        class="x-hist"
+        :samples="samples"
+        axis="x"
+      />
+
+      <DisplayTraceline
+        class="y-trace"
         :samples="samples"
         axis="y"
       />
-    </div>
-    <div>
-      <DisplayTraceline
-        :samples="samples"
-        axis="x"
-      />
-    </div>
-    <div>
-      <DisplayTraceline
+      <DisplayHistgram
+        class="y-hist"
         :samples="samples"
         axis="y"
       />
@@ -145,8 +146,12 @@ export default class App extends Vue {
 </script>
 
 <style>
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 #app {
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 32px 0;
 
@@ -163,5 +168,20 @@ export default class App extends Vue {
 .vue-slider {
   flex-grow: 1;
   margin-left: 16px;
+}
+
+.display {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  grid-row-gap: 32px;
+
+  margin-top: 24px;
+}
+.display > * {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.scatter-chart-wrapper {
+  grid-column: 1 / 3
 }
 </style>

@@ -1,13 +1,12 @@
 <template>
   <section class="scatter-chart-wrapper">
+    <p :style="labelStyle">{{ label }}</p>
     <div class="inner chart-wrapper">
-      <p :style="labelStyle">{{ label }}</p>
       <ScatterChart
         :title="{ text: titleText, fontColor: titleColor }"
         :datasets="datasets"
       />
     </div>
-    <!-- /.inner -->
   </section>
 </template>
 
@@ -21,7 +20,9 @@ p {
 }
 
 .inner {
-  max-width: 600px;
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
 }
 </style>
 

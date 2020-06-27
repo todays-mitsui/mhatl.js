@@ -1,15 +1,25 @@
 <template>
   <section class="chart-wrapper hist-chart-wrapper">
-    <div class="hist">
+    <div class="inner">
       <HistogramChart
         :bins="bins"
         :frequencies="frequencies"
         :count="numPracticalSamples"
       />
     </div>
-    <!-- /.inner -->
   </section>
 </template>
+
+<style scoped>
+.chart-wrapper {
+  padding-top: 4px;
+}
+
+.inner > *{
+  position: relative;
+  height: 146px;
+}
+</style>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
