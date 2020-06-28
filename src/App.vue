@@ -115,7 +115,9 @@ export default class App extends Vue {
     const accepted = r > 1 || r > uniform(0, 1)
     const result = accepted ? 'accepted' : 'rejected'
 
-    console.info({
+    console.table({
+      current: `(${current.x.toFixed(2)}, ${current.y.toFixed(2)})`,
+      next: `(${next.x.toFixed(2)}, ${next.y.toFixed(2)})`,
       pCurrent: pCurrent.toFixed(2),
       pNext: pNext.toFixed(2),
       r: r.toFixed(2),
