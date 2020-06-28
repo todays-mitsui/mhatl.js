@@ -34,7 +34,7 @@
       <VueSlider
         :value="speed"
         :min="1"
-        :max="20"
+        :max="10"
         :tooltip-formatter="speed => `Speed: ${speed}`"
         @change="onChangeSpeed"
       />

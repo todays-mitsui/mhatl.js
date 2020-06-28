@@ -81,8 +81,8 @@ export default class ScatterChart extends Mixins(Scatter) {
     const count = this.datasets.length
 
     switch (true) {
-      case count < 2000: return true
-      case count < 5000: return count % 4 === 0
+      case count < 1000: return true
+      case count < 3000: return count % 2 === 0
       case count < 10000: return count % 8 === 0
       default: return count % 16 === 0
     }

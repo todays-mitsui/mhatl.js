@@ -71,7 +71,7 @@ export default class App extends Vue {
   private x0 = 3.0
   private y0 = 3.0
   private pause = true
-  private speed = 10
+  private speed = 8
 
   private count = 0
   private current?: Point
