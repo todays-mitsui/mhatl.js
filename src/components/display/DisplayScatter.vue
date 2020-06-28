@@ -10,22 +10,6 @@
   </section>
 </template>
 
-<style scoped>
-p {
-  margin: 0 0 -1em;
-  font-size: 16px;
-  font-family: monospace;
-  font-weight: 700;
-  text-align: center;
-}
-
-.inner {
-  position: relative;
-  max-width: 400px;
-  margin: 0 auto;
-}
-</style>
-
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { helpers } from 'chart.js'
@@ -115,3 +99,19 @@ export default class DisplayScatter extends Vue {
   }
 }
 </script>
+
+<style scoped>
+p {
+  margin: 0 0 -1em;
+  font-size: 16px;
+  font-family: monospace;
+  font-weight: 700;
+  text-align: center;
+}
+
+.inner {
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+}
+</style>

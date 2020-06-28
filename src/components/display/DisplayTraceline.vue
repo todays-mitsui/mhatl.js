@@ -10,29 +10,6 @@
   </section>
 </template>
 
-<style scoped>
-.chart-wrapper {
-  position: relative;
-  padding-bottom: 24px;;
-}
-
-.inner > * {
-  position: relative;
-  height: 126px;
-}
-
-h3 {
-  position: absolute;
-  left: 8px;
-  bottom: 100%;
-  z-index: 1000;
-
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.2;
-}
-</style>
-
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Axis, Sample } from '../../../lib/interfaces'
@@ -83,3 +60,26 @@ export default class DisplayTraceline extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.chart-wrapper {
+  position: relative;
+  padding-bottom: 24px;;
+}
+
+.inner > * {
+  position: relative;
+  height: 126px;
+}
+
+h3 {
+  position: absolute;
+  left: 8px;
+  bottom: 100%;
+  z-index: 1000;
+
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+}
+</style>

@@ -10,17 +10,6 @@
   </section>
 </template>
 
-<style scoped>
-.chart-wrapper {
-  padding-top: 4px;
-}
-
-.inner > *{
-  position: relative;
-  height: 146px;
-}
-</style>
-
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { Axis, Sample } from '../../../lib/interfaces'
@@ -95,3 +84,14 @@ export default class DisplayHistgram extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.chart-wrapper {
+  padding-top: 4px;
+}
+
+.inner > *{
+  position: relative;
+  height: 146px;
+}
+</style>

@@ -8,7 +8,7 @@
       :disabled="!!samples.length"
       :speed.sync="speed"
       :pause.sync="pause"
-      @update:pause="onUpdatePause"
+      @update:pause="onChangePause"
       @reset="onReset"
     />
     <div class="display">
@@ -55,9 +55,14 @@ import { Point, Sample } from '../lib/interfaces'
 import rnorm from '../lib/util/rnorm'
 import uniform from '../lib/util/uniform'
 
-const SIGMA = 1.0 // 提案分布の標準偏差
-const RHO = 0.5 // 目標分布(二変量正規分布)の相関係数
-const BURN_IN_PERIOD = 50 // バーンイン期間の長さ
+/** 提案分布の標準偏差 */
+const SIGMA = 1.0
+
+/** 目標分布(二変量正規分布)の共分散 */
+const b = 0.5
+
+/** Burn-in 期間の長さ */
+const BURN_IN_PERIOD = 50
 
 @Component({
   components: {
@@ -68,27 +73,22 @@ const BURN_IN_PERIOD = 50 // バーンイン期間の長さ
   }
 })
 export default class App extends Vue {
+  /** サンプリングの初期値 x軸の値 */
   private x0 = 3.0
+
+  /** サンプリングの初期値 y軸の値 */
   private y0 = 3.0
-  private pause = true
-  private speed = 8
 
+  /** 生成したサンプル数 (Burn-in 期間や棄却されたものを含む) */
   private count = 0
-  private current?: Point
+
+  /** 生成したサンプル列 (Burn-in 期間や棄却されたものを含む) */
   private samples: Sample[] = []
-
-  loop () {
-    const sample = this.sample(this.count)
-    this.samples.push(sample)
-    this.count += 1
-
-    if (!this.pause) { setTimeout(this.loop, 1000 / this.speed) }
-  }
 
   // ======================================================================== //
 
   /**
-   * 提案分布
+   * 提案分布 - 正規分布からの実現値の組
    */
   q ({ x, y }: Point): Point {
     return {
@@ -101,9 +101,12 @@ export default class App extends Vue {
    * 目標分布のカーネル
    */
   p ({ x, y }: Point): number {
-    return Math.exp(-0.5 * (x * x - 2 * RHO * x * y + y * y))
+    return Math.exp(-0.5 * (x * x - 2 * b * x * y + y * y))
   }
 
+  /**
+   * サンプル取得処理
+   */
   sample (count: number): Sample {
     const current = this.current || { x: this.x0, y: this.y0 }
     const next = this.q(current)
@@ -139,6 +142,10 @@ export default class App extends Vue {
 
   // ======================================================================== //
 
+  private pause = true
+  private speed = 8
+  private current?: Point
+
   get p0 (): Point {
     return {
       x: this.x0,
@@ -146,7 +153,17 @@ export default class App extends Vue {
     }
   }
 
-  onUpdatePause () {
+  loop () {
+    const sample = this.sample(this.count)
+    this.samples.push(sample)
+    this.count += 1
+
+    if (!this.pause) { setTimeout(this.loop, 1000 / this.speed) }
+  }
+
+  // ======================================================================== //
+
+  onChangePause () {
     if (!this.pause) { this.loop() }
   }
 
