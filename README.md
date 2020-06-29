@@ -11,7 +11,7 @@ JavaScript(TypeScript) で MCMC ・メトロポリス・ヘイスティング法
 
 ## 解説記事
 
-- [【統計学】MCMC サンプリングを JavaScript によるアニメーションで実装しながら理解する](https://qiita.com/todays-mitsui/private/f6975b99b8ab16701bba)
+- [【統計学】MCMC サンプリングを JavaScript によるアニメーションで実装しながら理解する](https://qiita.com/todays-mitsui/items/c613bc39d1b3ce25fc7d)
 
 ## セットアップ
 
