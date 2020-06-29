@@ -9,6 +9,8 @@ JavaScript(TypeScript) で MCMC ・メトロポリス・ヘイスティング法
 
 - [mhatl.js](https://todays-mitsui.github.io/mhatl.js/)
 
+![165f97e3-ba51-2751-0ce0-05079657a929](https://user-images.githubusercontent.com/3040456/85984106-a3072e80-ba23-11ea-8a0d-ec9ead17c1bb.gif)
+
 ## 解説記事
 
 - [【統計学】MCMC サンプリングを JavaScript によるアニメーションで実装しながら理解する](https://qiita.com/todays-mitsui/items/c613bc39d1b3ce25fc7d)
